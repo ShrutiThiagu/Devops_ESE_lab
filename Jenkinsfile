@@ -32,12 +32,6 @@ pipeline {
                 }
             }
         }
-        stage('Build') {
-            steps {
-                echo 'Building the Java application with Maven...'
-                sh 'mvn clean package'
-            }
-        }
 
         stage('Build Docker Image') {
             steps {
