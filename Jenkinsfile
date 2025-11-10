@@ -24,10 +24,15 @@ pipeline {
             steps {
                 echo 'Building the Java application with Maven...'
                 script {
-                    // Get the path for the tool named 'Maven-3.9.6'
-                    def mvnHome = tool 'Maven-3.9.6'
+                    // --- BRUTE FORCE MAVEN INSTALL ---
+                    // This command checks for a maven folder. If it doesn't exist,
+                    // it downloads and unzips it.
+                    sh 'ls -d apache-maven-3.9.6 || (wget https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz && tar -xzf apache-maven-3.9.6-bin.tar.gz)'
                     
-                    // Call it using the full path to its 'bin' directory
+                    // Define the path to our manually downloaded Maven
+                    def mvnHome = "${env.WORKSPACE}/apache-maven-3.9.6"
+                    
+                    // Call it using the full path
                     sh "${mvnHome}/bin/mvn clean package"
                 }
             }
