@@ -61,10 +61,9 @@ pipeline {
             }
         }
 
-        stage('Deploy to EC2') {
+	stage('Deploy to EC2') {
             steps {
                 echo "Deploying to ${env.DEPLOY_SERVER_IP}..."
-                // Use the 'ec2-ssh-key' credential we will create in Jenkins
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'keyFile')]) {
                     sh """
                         ssh -i \${keyFile} -o StrictHostKeyChecking=no ec2-user@${env.DEPLOY_SERVER_IP} '
@@ -72,9 +71,6 @@ pipeline {
                         echo "--- Logged into deployment server ---"
 
                         # Log in to ECR on the deployment server
-                        # (Note: This assumes the deploy server also has an IAM role.
-                        # For simplicity, we'll do this, but the ssh command is better)
-                        # Let's re-auth just in case.
                         aws ecr get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin ${env.ECR_REPO_URI}
 
                         # Pull the latest image
@@ -89,7 +85,7 @@ pipeline {
                         # Run the new container
                         docker run -d -p 80:80 --name ${env.APP_NAME} ${env.ECR_REPO_URI}:latest
                         '
-                    """
+                """
                 }
             }
         }
