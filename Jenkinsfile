@@ -20,7 +20,18 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/ShrutiThiagu/Devops_ESE_lab.git'
             }
         }
-
+	stage('Build') {
+            steps {
+                echo 'Building the Java application with Maven...'
+                script {
+                    // Get the path for the tool named 'Maven-3.9.6'
+                    def mvnHome = tool 'Maven-3.9.6'
+                    
+                    // Call it using the full path to its 'bin' directory
+                    sh "${mvnHome}/bin/mvn clean package"
+                }
+            }
+        }
         stage('Build') {
             steps {
                 echo 'Building the Java application with Maven...'
