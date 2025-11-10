@@ -1,7 +1,9 @@
 // Jenkinsfile
 pipeline {
     agent any
-
+    tools {
+        maven 'Maven-3.9.6' // This name MUST match the name you set in Step 1
+    }
     environment {
         // --- REPLACE THESE VALUES ---
         AWS_REGION        = "eu-north-1"
